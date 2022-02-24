@@ -137,13 +137,13 @@ class LogisticRegression(BaseRegressor):
         y_hat = self.make_prediction(X)
 
         # total feats
-        feats = len(y_hat)
+        n = len(y_hat)
 
         # error diff
-        delta = y - y_hat
+        delta = y_hat
 
         # calculate
-        gradient = (1/feats)*(-X.T.dot(delta))
+        gradient = (1/n) * -(X.T.dot(delta))
 
         return gradient
     
@@ -165,7 +165,7 @@ class LogisticRegression(BaseRegressor):
         # need preds to calculate loss
         y_hat = self.make_prediction(X)
 
-        # since using log, we avoid the boundaries (0, 1) -- bc math: undefined
+        # since dividing by log, we avoid the boundaries (0, 1) -- bc math: undefined
         # using np.clip cuts off anything smaller or larger than a & b
         # here a = 0.000001 and b = 0.999999
         y_hat = np.clip(y_hat, 0.000001, 0.999999)
