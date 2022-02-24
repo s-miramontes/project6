@@ -108,7 +108,7 @@ class BaseRegressor():
 
         axs[1].plot(np.arange(len(loss_hist_val)), loss_hist_val)
         axs[1].set_title('Validation Loss')
-        
+
         plt.xlabel('Steps')
         axs[0].set_ylabel('Train Loss')
         axs[1].set_ylabel('Val Loss')
@@ -132,7 +132,20 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             gradients for given loss function (np.ndarray)
         """
-        pass
+        
+        # need predictions to calculate gradient
+        y_hat = self.make_prediction(X)
+
+        # total feats
+        feats = len(y_hat)
+
+        # error diff
+        delta = y - y_hat
+
+        # calculate
+        gradient = (1/feats)*(-X.T.dot(delta))
+
+        return gradient
     
     def loss_function(self, X, y) -> float:
         """
@@ -148,7 +161,21 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             average loss 
         """
-        pass
+        
+        # need preds to calculate loss
+        y_hat = self.make_prediction(X)
+
+        # since using log, we avoid the boundaries (0, 1) -- bc math: undefined
+        # using np.clip cuts off anything smaller or larger than a & b
+        # here a = 0.000001 and b = 0.999999
+        y_hat = np.clip(y_hat, 0.000001, 0.999999)
+
+        # now loss: binary cross entropy, in 2 terms bc its nicer looking
+        bin_ce1 =  y * np.log(y_hat)
+        bin_ce2 = (1 - y) * (np.log(1 - y_hat))
+
+        # loss: binary cross entropy
+        return -np.mean(bin_ce1 + bin_ce2)
     
     def make_prediction(self, X) -> np.array:
         """
@@ -163,7 +190,13 @@ class LogisticRegression(BaseRegressor):
             y_pred for given X
         """
 
-        pass
+        # dot product of data * feats, flattening to get array
+        dot = X.dot(self.W).flatten()
+
+        # calculate sigmoid and neg. sign
+        sig = 1 / (1 + np.exp(-dot))
+
+        return sig
 
 
 
