@@ -6,6 +6,25 @@ Write your logreg unit tests here. Some examples of tests we will be looking for
 More details on potential tests below, these are not exhaustive
 """
 
+import regression
+import numpy as np
+
+def test_gradient():
+	"""
+	Testing whether gradient was implemented
+	correctly
+	"""
+
+	pass
+
+def test_loss():
+	"""
+	Testing loss changes.
+	"""
+
+	pass
+
+
 def test_updates():
 	"""
 
